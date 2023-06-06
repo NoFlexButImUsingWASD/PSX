@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PSX Contest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        #contest-image {
+            float: right;
+            width: 150px;
+            height: auto;
+            margin: 0 0 10px 10px;
+            position: relative;
+        }
+        
+        #contest-image img {
+            width: 100%;
+            height: auto;
+        }
+        
+        #contest-image-overlay {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        #contest-info {
+            margin-bottom: 20px;
+        }
+        
+        .participant-list {
+            margin-top: 20px;
+        }
+        
+        #participation-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #participant-names {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        #participant-names li {
+            margin-bottom: 5px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>PSX Contest</h1>
+    <div id="contest-image">
+        <img src="errdr.png" alt="Error Dragons">
+        <div id="contest-image-overlay">
+            +100M Diamonds
+        </div>
+    </div>
+    <div id="contest-info">
+        <p>Welcome to the contest for 2 Error Dragons and 100M Diamonds!</p>
+        <p><strong>Contest Date:</strong> 8th June, 1:30 PM (13:30)</p>
+    </div>
+    <button onclick="showParticipationForm()">Participate</button>
+    
+    <div id="participation-form" style="display: none;">
+        <h3>Join the Contest</h3>
+        <label for="roblox-username">Roblox username:</label>
+        <input type="text" id="roblox-username">
+        <br><br>
+        <button onclick="submitParticipation()">Done</button>
+    </div>
+    
+    <div id="participants" class="participant-list" style="display: none;">
+        <h3>Participants</h3>
+        <ul id="participant-names"></ul>
+    </div>
+
+    <script>
+        // Load participants from localStorage when the page loads
+        window.addEventListener('DOMContentLoaded', function () {
+            loadParticipants();
+        });
+
+        function showParticipationForm() {
+            var form = document.getElementById('participation-form');
+            form.style.display = 'block';
+        }
+
+        function submitParticipation() {
+            var usernameInput = document.getElementById('roblox-username');
+            var username = usernameInput.value.trim();
+
+            if (username !== '') {
+                if (!isParticipant(username)) {
+                    saveParticipant(username);
+                    clearForm();
+                    showParticipants();
+                } else {
+                    alert('You have already participated in the contest.');
+                }
+            } else {
+                alert('Please enter your Roblox username.');
+            }
+        }
+
+        function saveParticipant(username) {
+            var participants = localStorage.getItem('participants');
+
+            if (participants) {
+                participants = JSON.parse(participants);
+            } else {
+                participants = [];
+            }
+
+            participants.push(username);
+            localStorage.setItem('participants', JSON.stringify(participants));
+        }
+
+        function loadParticipants() {
+            var participants = localStorage.getItem('participants');
+
+            if (participants) {
+                participants = JSON.parse(participants);
+                var participantList = document.getElementById('participant-names');
+
+                for (var i = 0; i < participants.length; i++) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = participants[i];
+                    participantList.appendChild(listItem);
+                }
+            }
+        }
+
+        function showParticipants() {
+            var participantList = document.getElementById('participants');
+            participantList.style.display = 'block';
+        }
+
+        function clearForm() {
+            var usernameInput = document.getElementById('roblox-username');
+            usernameInput.value = '';
+        }
+
+        function isParticipant(username) {
+            var participants = localStorage.getItem('participants');
+
+            if (participants) {
+                participants = JSON.parse(participants);
+
+                for (var i = 0; i < participants.length; i++) {
+                    if (participants[i] === username) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>
